@@ -1,5 +1,7 @@
 describe('API - Profile', () => {
 
+    let urlPerfis = '/api/profile'
+
     context('todos os perfis', () => {
         it('valida a API de perfis', () => {
 
@@ -12,7 +14,7 @@ describe('API - Profile', () => {
             //usando o destructuring javascript que substitui o nome da variavel dada para o request/retorno da API
             cy.request({
                 method: 'GET', //função da API GET/consultar
-                url: '/api/profile' //endereço da API
+                url: urlPerfis //endereço da API
             }).then(respostaAPI => { //arronw function
                 expect(respostaAPI.status).to.eq(200) //to.eq - igual
                 expect(respostaAPI.duration).to.be.lessThan(10000) //lessThan - menor que | 1s = 1000
@@ -29,13 +31,14 @@ describe('API - Profile', () => {
 
     context('perfil específico', () => {
 
+        let urlPerfil = '/api/profile/user'
         //teste negativo da API, validando um usuário que não existe
         //usando o destructuring javascript que substitui o nome da variavel dada para o request/retorno da API e pegar direto as variáveis da API
         it('seleciona um usuário invalido', () => {
 
             cy.request({
                 method: 'GET',
-                url: '/api/profile/user/1',
+                url: `${urlPerfil}/1`,
                 failOnStatusCode: false //usamos pois o cypress sempre espera 200 como true, difernete disto é considera como false
             }).then(({ status, body }) => { //usando destructuring
                 expect(status).to.eq(404)
@@ -49,7 +52,7 @@ describe('API - Profile', () => {
 
             cy.request({
                 method: 'GET',
-                url: `/api/profile/user/${usuarioId}` //usando template string
+                url: `${urlPerfil}/${usuarioId}` //usando template string
                 //url: '/api/profile/user/' + usuarioId
             }).then(({ status, body }) => {
                 expect(status).to.eq(200)
@@ -57,16 +60,16 @@ describe('API - Profile', () => {
             })
         })
 
-        it.only('valida um usuário válido buscando na base', () => {
+        it('valida um usuário válido buscando na base', () => {
 
             cy.request({
                 method: 'GET',
-                url: '/api/profile' //endereço da API
+                url: urlPerfis //endereço da API
             }).then(({ body }) => {
 
                 cy.request({
                     method: 'GET',
-                    url: `/api/profile/user/${body[2].user._id}` //usando template string                  
+                    url: `${urlPerfil}/${body[2].user._id}` //usando template string                  
                 }).then(({ body }) => {
                     expect(body.status).to.eq('QA Pleno')
                 })
