@@ -1,25 +1,25 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('login', (email, password, cookie) => {
+    cy.request({
+
+        method: 'POST',
+        url: '/api/auth',
+        //usando variável de ambiente para logar na aplicação
+        //para isso criar o arquivo cypress.env.json
+        //também é possível criar usuário na variável de ambiente no wind - não recomentado - 
+        body: {
+            email, //quando nova das variaveis são iguais em JScript ira fazer o email : email
+            password
+        }
+    }).then(({ body }) => {
+
+        cy.setCookie(cookie, body.jwt)
+        Cypress.env(cookie, body.jwt)
+    })
+})
+
+//todo teste iniciado pelo cypress o cookie são limpos por padrão, isso gerar erro quando realizado teste de CRUD
+//O Cypress.Cookies.defaults usando em aula na versão 12 do cypress foi descontinuada 
+Cypress.Commands.add('manterCookie', (cookie) => {
+    cy.setCookie(cookie, Cypress.env(cookie))
+})
+
