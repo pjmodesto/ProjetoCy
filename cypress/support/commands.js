@@ -1,4 +1,5 @@
 import Ajv from 'ajv'
+import { definitionHelper } from '../utils/schemaDefinitions'
 
 Cypress.Commands.add('login', (email, password, cookie) => {
     cy.request({
@@ -23,13 +24,25 @@ Cypress.Commands.add('manterCookie', (cookie) => {
     cy.setCookie(cookie, Cypress.env(cookie))
 })
 
-Cypress.Commands.add('testeContrato', () => {
+Cypress.Commands.add('testeContrato', (schema, resposta) => {
     
     //função que mostra os erros quando uma validação de contrado falhar
-    const getSchemaError = (ajvErros) => {
+    const getSchemaError = ajvErros => { //quando somente uma parâmetro não precisa dos parentece
         return cy.wrap(
             `Campo: ${ajvErros[0]['instancePath']} é invalido. Erro: ${ajvErros[0]['message']}` //o erro sempre estará na casa zero
         )
     }
 
+    // iniciar o AJV
+    const ajv = new Ajv() //instanciando um objeto
+    const validacao = ajv.addSchema(definitionHelper).compile(schema)
+    const valido = validacao(resposta)
+
+    //verficar se schema passsou ou falhou
+    if (!valido) {
+        getSchemaError(validacao.errors).then(schemaError => {
+            throw new Error(schemaError)
+        })
+    } else 
+        expect(valido, 'Validação de Contrato').to.be.true
 })

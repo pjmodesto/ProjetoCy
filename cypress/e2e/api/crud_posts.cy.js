@@ -1,8 +1,11 @@
+import { testeContratoPOSTPosts } from '../../fixtures/schema-POST-posts'
+import { testeContratoGETPosts } from '../../fixtures/schema-GET-posts'
+
 describe('CRUD - Posts', () => {
 
     //o JScript é uma linguagem assincrona o let é uma variável JScript
     let potsId = ''
-    let mensagem = 'Teste Modesto Posts via Cypress - CRUD 3'
+    let mensagem = 'Teste Modesto Posts via Cypress - CRUD 4'
 
     // o before é executado uma única vez
     before(() => {
@@ -33,6 +36,8 @@ describe('CRUD - Posts', () => {
             expect(status).to.eq(201)
             expect(body.text).to.eq(mensagem)
             potsId = body._id
+
+            cy.testeContrato(testeContratoPOSTPosts, body)
         })
     })//todo teste iniciado pelo cypress o estado do browser é limpo inclusive o cookie é limpo por padrão, isso gerar erro quando realizado teste de CRUD
 
@@ -45,6 +50,8 @@ describe('CRUD - Posts', () => {
             expect(status).to.eq(200)
             expect(body.text).to.eq(mensagem)
             expect(body.likes).to.have.lengthOf(0) //valida qtde do array
+
+            cy.testeContrato(testeContratoGETPosts, body)
         })
     })
 
