@@ -5,7 +5,7 @@ describe('CRUD - Posts', () => {
 
     //o JScript é uma linguagem assincrona o let é uma variável JScript
     let potsId = ''
-    let mensagem = 'Teste Modesto Posts via Cypress - CRUD 4'
+    let mensagem = 'Teste Modesto Posts via Cypress - CRUD 5'
 
     // o before é executado uma única vez
     before(() => {

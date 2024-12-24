@@ -1,6 +1,7 @@
 import Ajv from 'ajv'
 import { definitionHelper } from '../utils/schemaDefinitions'
 
+// loga a aplicação via API
 Cypress.Commands.add('login', (email, password, cookie) => {
     cy.request({
         method: 'POST',
@@ -24,8 +25,9 @@ Cypress.Commands.add('manterCookie', (cookie) => {
     cy.setCookie(cookie, Cypress.env(cookie))
 })
 
+// executa teste e contrato em uma API
 Cypress.Commands.add('testeContrato', (schema, resposta) => {
-    
+
     //função que mostra os erros quando uma validação de contrado falhar
     const getSchemaError = ajvErros => { //quando somente uma parâmetro não precisa dos parentece
         return cy.wrap(
@@ -43,6 +45,11 @@ Cypress.Commands.add('testeContrato', (schema, resposta) => {
         getSchemaError(validacao.errors).then(schemaError => {
             throw new Error(schemaError)
         })
-    } else 
+    } else
         expect(valido, 'Validação de Contrato').to.be.true
+})
+
+// seleciona um elemento pelo atributo data-test
+Cypress.Commands.add('getElement', seletor => {
+    return cy.get(`[data-test=${seletor}]`)
 })
