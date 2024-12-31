@@ -25,6 +25,10 @@ Cypress.Commands.add('manterCookie', (cookie) => {
     cy.setCookie(cookie, Cypress.env(cookie))
 })
 
+Cypress.Commands.add('apagarCookie', (cookie) => {
+    cy.clearCookies();
+})
+
 // executa teste e contrato em uma API
 Cypress.Commands.add('testeContrato', (schema, resposta) => {
 
